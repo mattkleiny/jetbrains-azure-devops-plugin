@@ -9,13 +9,27 @@ for [Task Management](https://www.jetbrains.com/help/idea/managing-tasks-and-con
 ## Installation
 
 * Download the latest build from [GitHub actions](https://github.com/mattkleiny/jetbrains-azure-devops-plugin/actions)
-* Install the [plugin from disk in your IDE](https://www.jetbrains.com/help/idea/managing-plugins.html#install_plugin_from_disk). All JetBrains IDEs are supported.
-* Add a new server and select `Azure DevOps` as the server type. You can find the settings under `Tools -> Tasks -> Servers`.
-  * Enter the Team ID from Azure DevOps.
-  * Enter the Project Name from Azure DevOps.
-  * Enter a [Personal Access Token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) for Azure DevOps.
+* Install the [plugin from disk in your IDE](https://www.jetbrains.com/help/idea/managing-plugins.html#install_plugin_from_disk). All JetBrains IDEs should be supported.
+* Add a new server and select `AzureDevOps` as the server type. You can find the settings under `Tools -> Tasks -> Servers`.
+  * Enter your desired Team ID.
+  * Enter your desired Project Name.
+  * Enter your own [Personal Access Token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) for Azure DevOps.
     * It needs the following permissions:
-      * Project and Team: Read
-      * Work Items: Read & Write
-* Open the `Tasks` tool window, and it should now display Work Items that are assigned to you.
-* You can now use all the standard [JetBrains Task Management features](https://www.jetbrains.com/help/idea/managing-tasks-and-context.html)
+      * Project and Team: `Read`
+      * Work Items: `Read & Write`
+
+You can now open the `Tasks` tool window, and it should now display work items from the Azure DevOps instance.
+
+## Features
+
+At the moment, the tool will only show issues assigned to the Access Token owner.
+
+Most of the standard Task Management features are supported:
+- [x] Open extended issue details
+- [x] Search open issues
+- [x] Search closed issues
+- [x] Changelists and commit messages
+
+A few features are not yet supported:
+- [ ] Comments
+- [ ] Time tracking
