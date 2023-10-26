@@ -7,7 +7,7 @@ import com.intellij.tasks.CustomTaskState
  *
  * This type is serializable, and will be persisted to the workspace (and so needs to have a default constructor).
  */
-data class AzureWorkItemState(
+class AzureWorkItemState(
     @JvmField val id: String,
     @JvmField val state: String,
 ) : CustomTaskState(id, state) {

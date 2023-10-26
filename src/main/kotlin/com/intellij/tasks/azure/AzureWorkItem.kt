@@ -16,7 +16,7 @@ import javax.swing.Icon
  * references the task id, and that data will be re-fetched from the API
  * when IntelliJ needs to query the data.
  */
-data class AzureWorkItem(
+class AzureWorkItem(
     @JvmField val id: String,
     @JvmField val summary: String,
     @JvmField val description: String?,

@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
  *
  * This type is serializable, and will be persisted to the workspace (and so needs to have a default constructor).
  */
-@Tag("azureDevOps")
+@Tag("AzureDevOps")
 class AzureDevOpsRepository : TaskRepository {
     @Suppress("unused")
     constructor() : super()
@@ -62,7 +62,7 @@ class AzureDevOpsRepository : TaskRepository {
                 return runBlocking { body(it) }
             } catch (exception: InterruptedException) {
                 // translate cancellations into IDE-specific ignores
-                throw ProcessCanceledException(exception);
+                throw ProcessCanceledException(exception)
             }
         }
     }

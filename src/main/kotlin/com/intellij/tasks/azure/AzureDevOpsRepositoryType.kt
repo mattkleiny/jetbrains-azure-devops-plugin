@@ -11,7 +11,7 @@ import com.intellij.util.Consumer
  * This is the entry point to the plugin, and allows us to inject new functionality into the editor.
  */
 class AzureDevOpsRepositoryType : TaskRepositoryType<AzureDevOpsRepository>() {
-    override fun getName() = "Azure DevOps"
+    override fun getName() = "AzureDevOps" // this needs to match the 'Tag' on the repository
     override fun getIcon() = AzureDevOpsIcons.logo
     override fun createRepository() = AzureDevOpsRepository(this)
     override fun getRepositoryClass() = AzureDevOpsRepository::class.java
