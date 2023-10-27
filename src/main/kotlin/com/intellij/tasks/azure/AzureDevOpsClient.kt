@@ -1,6 +1,5 @@
 package com.intellij.tasks.azure
 
-import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.future.await
 import java.io.Closeable
 import java.net.URI
@@ -22,7 +21,6 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
 
     private val baseUri = URI("https://dev.azure.com/$encodedTeamId/")
 
-    /** The main [HttpClient] */
     private val client: HttpClient = HttpClient.newBuilder()
         .followRedirects(HttpClient.Redirect.NORMAL)
         .connectTimeout(Duration.ofSeconds(10))
@@ -106,6 +104,16 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
         return result.statusCode() != 404
     }
 
+    /** Gets all possible [AzureWorkItemState]s for the given [AzureWorkItem.type] */
+    suspend fun getWorkItemStates(type: String): Set<AzureWorkItemState> {
+        val response = execute("$encodedProjectId/_apis/wit/workitemtypes/${type.toUrlEncoded()}/states?api-version=7.2-preview.1")
+        if (response.statusCode() == 404) {
+            return emptySet();
+        }
+
+        return response.asJson()["value"].map { AzureWorkItemState.fromJson(it) }.toSet()
+    }
+
     /** Sets the state of a work item, ignoring the revision of the item */
     suspend fun setWorkItemState(workId: String, state: String): Boolean {
         val mutation = arrayOf(
@@ -150,7 +158,6 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
     }
 
 
-    /** Closes the underlying HTTP client */
     override fun close() {
         if (client is Closeable) {
             client.close()

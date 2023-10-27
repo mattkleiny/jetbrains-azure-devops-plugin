@@ -139,14 +139,19 @@ class AzureDevOpsRepository : TaskRepository {
         }
     }
 
+    /** A cache of [CustomTaskState]s for each work item type */
+    private val workItemStateCache: MutableMap<String, Set<CustomTaskState>> = mutableMapOf()
+
     override fun getAvailableTaskStates(task: Task): MutableSet<CustomTaskState> {
-        // TODO: query the backend for these instead? at the moment we're just hardcoding them to the defaults
-        return mutableSetOf(
-            AzureWorkItemState.fromString("New"),
-            AzureWorkItemState.fromString("Active"),
-            AzureWorkItemState.fromString("Resolved"),
-            AzureWorkItemState.fromString("Closed"),
-        )
+        // we need to know the type of the work item, so we'll have to re-query here; IntelliJ doesn't cache it
+        return withClient {
+            val workItem = it.getWorkItem(task.id)
+            if (workItem == null) {
+                mutableSetOf()
+            } else {
+                workItemStateCache.getOrPut(workItem.type) { it.getWorkItemStates(workItem.type) }.toMutableSet()
+            }
+        }
     }
 
     override fun setPreferredOpenTaskState(state: CustomTaskState?) {
@@ -202,7 +207,5 @@ class AzureDevOpsRepository : TaskRepository {
         }
     }
 
-    override fun clone(): AzureDevOpsRepository {
-        return AzureDevOpsRepository(this)
-    }
+    override fun clone() = AzureDevOpsRepository(this)
 }

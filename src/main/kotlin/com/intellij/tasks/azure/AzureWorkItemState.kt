@@ -1,5 +1,6 @@
 package com.intellij.tasks.azure
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.intellij.tasks.CustomTaskState
 
 /**
@@ -21,7 +22,7 @@ class AzureWorkItemState(
     fun isClosed() = state.equals("closed", true) || state.equals("resolved", true)
 
     companion object {
-        /** Creates a [AzureWorkItemState] from the given string */
         fun fromString(id: String) = AzureWorkItemState(id, id)
+        fun fromJson(json: JsonNode) = fromString(json["name"].asText())
     }
 }
