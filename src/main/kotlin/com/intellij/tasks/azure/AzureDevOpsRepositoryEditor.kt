@@ -75,7 +75,7 @@ class AzureDevOpsRepositoryEditor(
             it.text = "Format commit messages"
             it.toolTipText = "Whether or not to format commit messages"
             it.addActionListener {
-                txtCommitMessage.component.isEnabled = chkFormatCommitMessage.isSelected
+                txtCommitMessage.contentComponent.isEnabled = chkFormatCommitMessage.isSelected
                 repository.isShouldFormatCommitMessage = chkFormatCommitMessage.isSelected
                 changeListener.consume(repository)
             }
@@ -84,6 +84,7 @@ class AzureDevOpsRepositoryEditor(
         docCommitMessage = EditorFactory.getInstance().createDocument(repository.commitMessageFormat)
         txtCommitMessage = EditorFactory.getInstance().createEditor(docCommitMessage).also {
             it.component.isEnabled = repository.isShouldFormatCommitMessage
+            it.contentComponent.isEnabled = repository.isShouldFormatCommitMessage
             it.component.toolTipText = "The format of the commit message"
             docCommitMessage.addDocumentListener(EditorDocumentListener {
                 repository.commitMessageFormat = docCommitMessage.text
@@ -100,17 +101,14 @@ class AzureDevOpsRepositoryEditor(
         val lblAccessToken = JBLabel("Access token:").also {
             it.labelFor = txtAccessToken
         }
-        val lblCommitMessageFormat = JBLabel("Commit message:").also {
-            it.labelFor = txtCommitMessage.component
-        }
 
         return FormBuilder.createFormBuilder()
             .addLabeledComponent(lblTeamId, txtTeamId)
             .addLabeledComponent(lblProjectId, txtProjectId)
             .addLabeledComponent(lblAccessToken, txtAccessToken)
-            .addLabeledComponent(lblCommitMessageFormat, txtCommitMessage.component)
-            .addComponent(chkFormatCommitMessage)
             .addComponent(chkIsShared)
+            .addComponent(chkFormatCommitMessage)
+            .addComponentFillVertically(txtCommitMessage.component, 4)
             .panel
     }
 
