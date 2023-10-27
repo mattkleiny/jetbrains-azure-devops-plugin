@@ -1,11 +1,16 @@
 package com.intellij.tasks.azure
 
+import com.intellij.credentialStore.CredentialAttributes
+import com.intellij.credentialStore.Credentials
+import com.intellij.credentialStore.generateServiceName
+import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.tasks.CustomTaskState
 import com.intellij.tasks.Task
 import com.intellij.tasks.TaskRepository
 import com.intellij.util.xmlb.annotations.Tag
+import com.intellij.util.xmlb.annotations.Transient
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -38,7 +43,21 @@ class AzureDevOpsRepository : TaskRepository {
     var projectId: String? = null
 
     /** The Personal Access Token (PAT) of the user in Azure DevOps */
-    var accessToken: String? = null
+    // we persist this item via the [PasswordSafe] API instead of in the workspace files
+    var accessToken: String?
+        @Transient
+        get() {
+            val passwordSafe = PasswordSafe.instance
+            val credentials = passwordSafe.get(credentialAttributes)
+
+            return credentials?.getPasswordAsString()
+        }
+        set(value) {
+            val passwordSafe = PasswordSafe.instance
+            val credentials = passwordSafe.get(credentialAttributes)
+
+            passwordSafe.set(credentialAttributes, Credentials(credentials?.userName, value))
+        }
 
     /** The preferred state to set a [Task] to when it is closed */
     @JvmField
@@ -47,6 +66,16 @@ class AzureDevOpsRepository : TaskRepository {
     /** The preferred state to set a [Task] to when it is opened */
     @JvmField
     var preferredOpenTaskState: CustomTaskState? = null
+
+    /** Generates the [CredentialAttributes] for the attribute store. */
+    private val credentialAttributes
+        get() = CredentialAttributes(
+            userName = "$teamId/$projectId",
+            serviceName = generateServiceName(
+                subsystem = "Tasks",
+                key = "${repositoryType.name} ${getUrl()}"
+            )
+        )
 
     /**
      * Executes some code with an [AzureDevOpsClient] and closes it when done.
