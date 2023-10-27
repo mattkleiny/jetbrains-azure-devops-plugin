@@ -65,11 +65,10 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
             return emptyArray();
         }
 
-        // TODO: optimize these queries; there's a batch API for fetching all at once
-        val workItemLinks = response.asJson()["workItems"].map { ItemLink.fromJson(it) }
-        val workItems = workItemLinks.mapNotNull { getWorkItem(it.id) }
+        // fetch entire set of work items as a single batch call
+        val workItemIds = response.asJson()["workItems"].map { it["id"].asText() }
 
-        return workItems.toTypedArray()
+        return getWorkItems(workItemIds)
     }
 
     /** Attempts to get a [AzureWorkItem] from Azure DevOps by its ID. If it doesn't exist null is returned. */
@@ -80,6 +79,16 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
         }
 
         return AzureWorkItem.fromJson(response.asJson())
+    }
+
+    /** Fetches a set of work items at the same time, based on ids */
+    suspend fun getWorkItems(workIds: List<String>): Array<AzureWorkItem> {
+        val response = execute("$encodedProjectId/_apis/wit/workitems/?ids=${workIds.joinToString(",")}&api-version=7.2-preview.3")
+        if (response.statusCode() == 404) {
+            return emptyArray();
+        }
+
+        return response.asJson()["value"].map { AzureWorkItem.fromJson(it) }.toTypedArray()
     }
 
     /** Sets the state of a work item if and only if the [revision] matches. */
@@ -150,17 +159,5 @@ class AzureDevOpsClient(teamId: String, projectId: String, accessToken: String) 
 
     private data class QueryOp(val query: String)
     private data class MutationOp(val op: String, val path: String, val value: Any)
-
-    /** An internal link to some other item in Azure DevOps */
-    private data class ItemLink(val id: String, val url: String) {
-        companion object {
-            fun fromJson(json: JsonNode): ItemLink {
-                return ItemLink(
-                    id = json["id"].asText(),
-                    url = json["url"].asText()
-                )
-            }
-        }
-    }
 }
 
