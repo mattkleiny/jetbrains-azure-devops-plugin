@@ -22,7 +22,7 @@ You can now open the `Tasks` tool window, and it should now display work items f
 
 ## Features
 
-At the moment, the tool will only show issues assigned to the Access Token owner.
+At the moment, the tool will only show Work Items that assigned to the Access Token owner.
 
 Most of the standard Task Management features are supported:
 - [x] Open extended issue details
@@ -30,6 +30,6 @@ Most of the standard Task Management features are supported:
 - [x] Search closed issues
 - [x] Changelists and commit messages
 
-A few features are not yet supported:
+These features aren't supported:
 - [ ] Comments
 - [ ] Time tracking
