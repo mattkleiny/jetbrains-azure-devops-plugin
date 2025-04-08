@@ -33,3 +33,5 @@ Most of the standard Task Management features are supported:
 These features aren't supported:
 - [ ] Comments
 - [ ] Time tracking
+
+Making a change to the reader, to trigger GitHub actions
