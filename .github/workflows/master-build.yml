@@ -20,7 +20,7 @@ jobs:
         gradle-version: wrapper
 
     - name: Upload to Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: azure-devops-plugin-1.0-SNAPSHOT
         path: build/libs/azure-devops-plugin-1.0-SNAPSHOT.jar
