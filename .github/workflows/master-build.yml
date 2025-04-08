@@ -11,10 +11,10 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Assemble with Gradle
-      uses: burrunan/gradle-cache-action@v1
+      uses: burrunan/gradle-cache-action@v2
       with:
         arguments: assemble
         gradle-version: wrapper
