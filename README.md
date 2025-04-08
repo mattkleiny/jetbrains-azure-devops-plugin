@@ -34,4 +34,6 @@ These features aren't supported:
 - [ ] Comments
 - [ ] Time tracking
 
-Making a change to the reader, to trigger GitHub actions
+## Changelog
+### 2025-04-08 
+- Updated the GitHub pipeline to use the latest version of the upstream GitHub action, fixes failure to run due to dependency on retired version
