@@ -11,16 +11,16 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Assemble with Gradle
-      uses: burrunan/gradle-cache-action@v1
+      uses: burrunan/gradle-cache-action@v2
       with:
         arguments: assemble
         gradle-version: wrapper
 
     - name: Upload to Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: azure-devops-plugin-1.0-SNAPSHOT
         path: build/libs/azure-devops-plugin-1.0-SNAPSHOT.jar

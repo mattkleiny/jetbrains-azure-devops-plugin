@@ -33,3 +33,7 @@ Most of the standard Task Management features are supported:
 These features aren't supported:
 - [ ] Comments
 - [ ] Time tracking
+
+## Changelog
+### 2025-04-08 
+- Updated the GitHub pipeline to use the latest version of the upstream GitHub action, fixes failure to run due to dependency on retired version
